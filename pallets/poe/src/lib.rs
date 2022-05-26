@@ -42,7 +42,14 @@ pub mod pallet {
 
 	// Errors inform users that something went wrong.
 	#[pallet::error]
-	pub enum Error<T> {}
+	pub enum Error<T> {
+		/// The proof has already been claimed.
+		ProofAlreadyClaimed,
+		/// The proof does not exist, so it cannot be revoked.
+		NoSuchProof,
+		/// The proof is claimed by another account, so caller can't revoke it.
+		NotProofOwner,
+	}
 
 	// TODO: add #[pallet::storage] block
 
