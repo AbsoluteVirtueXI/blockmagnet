@@ -21,6 +21,9 @@ pub mod pallet {
 	pub trait Config: frame_system::Config {
 		/// Because this pallet emits events, it depends on the runtime's definition of an event.
 		type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
+
+		/// For constraining the maximum bytes of a hash used for any proof
+		type MaxBytesInHash: Get<u32>;
 	}
 
 	// Pallets use events to inform users when important changes are made.

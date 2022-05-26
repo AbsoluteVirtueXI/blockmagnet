@@ -306,6 +306,7 @@ impl pallet_template::Config for Runtime {
 /// Configure the pallet-poe in pallets/poe
 impl pallet_poe::Config for Runtime {
 	type Event = Event;
+	type MaxBytesInHash = frame_support::traits::ConstU32<64>;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
