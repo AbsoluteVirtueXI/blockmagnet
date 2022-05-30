@@ -7,8 +7,6 @@ pub use pallet::*;
 
 #[frame_support::pallet]
 pub mod pallet {
-	use core::ops::Bound;
-
 	use frame_support::{pallet_prelude::*, BoundedVec};
 	use frame_system::pallet_prelude::*;
 
@@ -51,11 +49,72 @@ pub mod pallet {
 		NotProofOwner,
 	}
 
-	// TODO: add #[pallet::storage] block
+	#[pallet::storage]
+	pub(super) type Proofs<T: Config> = StorageMap<
+		_,
+		Blake2_128Concat,
+		BoundedVec<u8, T::MaxBytesInHash>,
+		(T::AccountId, T::BlockNumber),
+		OptionQuery,
+	>;
 
 	// Dispatchable functions allows users to interact with the pallet and invoke state changes.
 	// These functions materialize as "extrinsics", which are often compared to transactions.
 	// Dispatchable functions must be annotated with a weight and must return a DispatchResult.
 	#[pallet::call]
-	impl<T: Config> Pallet<T> {}
+	impl<T: Config> Pallet<T> {
+		#[pallet::weight(1_000)]
+		pub fn create_claim(
+			origin: OriginFor<T>,
+			proof: BoundedVec<u8, T::MaxBytesInHash>,
+		) -> DispatchResult {
+			// Check that the extrinsic was signed and get the signer.
+			// This function will return an error if the extrinsic is not signed.
+			// https://docs.substrate.io/v3/runtime/origins
+			let sender = ensure_signed(origin)?;
+
+			// Verify that the specified proof has not already been claimed.
+			ensure!(!Proofs::<T>::contains_key(&proof), Error::<T>::ProofAlreadyClaimed);
+
+			// Get the block number from the FRAME System pallet.
+			let current_block = <frame_system::Pallet<T>>::block_number();
+
+			// Store the proof with the sender and block number.
+			Proofs::<T>::insert(&proof, (&sender, current_block));
+
+			// Emit an event that the claim was created.
+			Self::deposit_event(Event::ClaimCreated(sender, proof));
+
+			Ok(())
+		}
+
+		#[pallet::weight(10_000)]
+		pub fn revoke_claim(
+			origin: OriginFor<T>,
+			proof: BoundedVec<u8, T::MaxBytesInHash>,
+		) -> DispatchResult {
+			// Check that the extrinsic was signed and get the signer.
+			// This function will return an error if the extrinsic is not signed.
+			// https://docs.substrate.io/v3/runtime/origins
+			let sender = ensure_signed(origin)?;
+
+			// Verify that the specified proof has been claimed.
+			ensure!(Proofs::<T>::contains_key(&proof), Error::<T>::NoSuchProof);
+
+			// Get owner of the claim.
+			// Panic condition: there is no way to set a `None` owner, so this must always unwrap.
+			let (owner, _) = Proofs::<T>::get(&proof).expect("All proofs must have an owner!");
+
+			// Verify that sender of the current call is the claim owner.
+			ensure!(sender == owner, Error::<T>::NotProofOwner);
+
+			// Remove claim from storage.
+			Proofs::<T>::remove(&proof);
+
+			// Emit an event that the claim was erased.
+			Self::deposit_event(Event::ClaimRevoked(sender, proof));
+
+			Ok(())
+		}
+	}
 }
