@@ -46,6 +46,9 @@ pub use sp_runtime::{Perbill, Permill};
 /// Import poe pallet.
 pub use pallet_poe;
 
+/// Import existence pallet.
+pub use pallet_existence;
+
 /// Import the template pallet.
 pub use pallet_template;
 
@@ -309,6 +312,11 @@ impl pallet_poe::Config for Runtime {
 	type MaxBytesInHash = frame_support::traits::ConstU32<64>;
 }
 
+/// Configure the pallet-existence in pallets/existence
+impl pallet_existence::Config for Runtime {
+	type Event = Event;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -329,6 +337,8 @@ construct_runtime!(
 		TemplateModule: pallet_template,
 		// Include the custom logic from the pallet-poe in the runtime.
 		Poe: pallet_poe,
+		// Include the custom logic from the pallet-existence in the runtime.
+		Existence: pallet_existence,
 	}
 );
 
@@ -375,6 +385,7 @@ mod benches {
 		[pallet_timestamp, Timestamp]
 		[pallet_template, TemplateModule]
 		[pallet_poe, Poe]
+		[pallet_existence, Existence]
 	);
 }
 
