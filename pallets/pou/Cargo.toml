@@ -1,7 +1,7 @@
 [package]
-name = "pallet-existence"
+name = "pallet-pou"
 version = "4.0.0-dev"
-description = "FRAME pallet for proof of existence"
+description = "FRAME pallet for proof of use of an address"
 authors = ["Substrate DevHub <https://github.com/substrate-developer-hub>"]
 homepage = "https://substrate.io/"
 edition = "2021"

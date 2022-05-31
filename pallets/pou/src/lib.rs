@@ -37,7 +37,7 @@ pub mod pallet {
 	pub enum Event<T: Config> {
 		/// Event documentation should end with an array that provides descriptive names for event
 		/// parameters. [something, who]
-		Existent(T::AccountId, T::BlockNumber),
+		AddressUsed(T::AccountId, T::BlockNumber),
 	}
 
 	// Dispatchable functions allows users to interact with the pallet and invoke state changes.
@@ -55,7 +55,7 @@ pub mod pallet {
 			let sender = ensure_signed(origin)?;
 			let current_block = <frame_system::Pallet<T>>::block_number();
 			Proofs::<T>::insert(&sender, (true, current_block));
-			Self::deposit_event(Event::Existent(sender, current_block));
+			Self::deposit_event(Event::AddressUsed(sender, current_block));
 			Ok(())
 		}
 	}

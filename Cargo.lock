@@ -3773,10 +3773,10 @@ dependencies = [
  "hex-literal",
  "pallet-aura",
  "pallet-balances",
- "pallet-existence",
  "pallet-grandpa",
  "pallet-nicks",
  "pallet-poe",
+ "pallet-pou",
  "pallet-randomness-collective-flip",
  "pallet-sudo",
  "pallet-template",
@@ -4010,20 +4010,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-existence"
-version = "4.0.0-dev"
-dependencies = [
- "frame-benchmarking",
- "frame-support",
- "frame-system",
- "parity-scale-codec",
- "scale-info",
- "sp-core",
- "sp-io",
- "sp-runtime",
-]
-
-[[package]]
 name = "pallet-grandpa"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.22#616d33ea23bab86cafffaf116fc607b6790fb4eb"
@@ -4062,6 +4048,20 @@ dependencies = [
 
 [[package]]
 name = "pallet-poe"
+version = "4.0.0-dev"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "parity-scale-codec",
+ "scale-info",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+]
+
+[[package]]
+name = "pallet-pou"
 version = "4.0.0-dev"
 dependencies = [
  "frame-benchmarking",
