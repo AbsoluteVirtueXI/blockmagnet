@@ -49,6 +49,9 @@ pub use pallet_poe;
 /// Import pou pallet.
 pub use pallet_pou;
 
+/// Import kitties pallet.
+pub use pallet_kitties;
+
 /// Import the template pallet.
 pub use pallet_template;
 
@@ -317,6 +320,12 @@ impl pallet_pou::Config for Runtime {
 	type Event = Event;
 }
 
+/// Configure the pallet-kitties in pallets/kitties
+impl pallet_kitties::Config for Runtime {
+	type Event = Event;
+	type Currency = Balances;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -339,6 +348,9 @@ construct_runtime!(
 		Poe: pallet_poe,
 		// Include the custom logic from the pallet-existence in the runtime.
 		Pou: pallet_pou,
+		// Inclue the custome logic from the pallet-kitties in the runtime.
+		SubstrateKitties: pallet_kitties
+
 	}
 );
 
@@ -386,6 +398,7 @@ mod benches {
 		[pallet_template, TemplateModule]
 		[pallet_poe, Poe]
 		[pallet_pou, Pou]
+		[pallet_kitties, SubstrateKitties]
 	);
 }
 
